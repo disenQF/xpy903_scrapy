@@ -8,7 +8,7 @@ from scrapy.http import HtmlResponse
 
 class FreebookSpider(scrapy.Spider):
     name = 'freebook'
-    allowed_domains = ['www.qidan.com', 'book.qidian.com']
+    allowed_domains = ['www.qidan.com', 'book.qidian.com', 'read.qidian.com']
     start_urls = ['https://www.qidian.com/free/all']
 
     def parse(self, response: HtmlResponse):
@@ -19,7 +19,7 @@ class FreebookSpider(scrapy.Spider):
             li_nodes = response.css('.all-img-list li')  # list[<Selector>, ..]
             # print(type(li_nodes))
             # print(li_nodes)
-            for li_node in li_nodes:
+            for index, li_node in enumerate(li_nodes):
                 # 查看每本书的信息
                 item = {}
                 # item['name'] = li_node.css('h4 a').xpath('./text()').extract_first()
@@ -41,7 +41,7 @@ class FreebookSpider(scrapy.Spider):
                 yield Request('https:' + item['info_url'],
                               callback=self.parse_detail,
                               meta={'book_id': item['id']},
-                              priority=2)  # 请求在scheduler中的优先级，值越小级别越高。
+                              priority=200-index)  # 请求在scheduler中的优先级，值越大级别越高。
 
             # 下一页
             next_url = response.css('.lbf-pagination-item-list').xpath('./li[last()]/a/@href').get()
@@ -54,11 +54,12 @@ class FreebookSpider(scrapy.Spider):
         print('-'*20, '开始阅读', sep='\n')
         chap_url = 'https:'+response.css('.red-btn').xpath('./@href').get()
 
+        print('-'*20+chap_url+'-'*10)
 
         yield Request(chap_url,
                       callback=self.parse_chapter,
                       meta={'book_id': response.request.meta['book_id']},
-                      priority=5)
+                      priority=500)
 
     def parse_chapter(self, response):
         item = {}
