@@ -19,7 +19,7 @@ NEWSPIDER_MODULE = 'qidian.spiders'
 #USER_AGENT = 'qidian (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False  # 禁用自动下载robots.txt文件
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
