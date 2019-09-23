@@ -5,6 +5,8 @@ import scrapy
 from scrapy import Selector, Request
 from scrapy.http import HtmlResponse
 
+from qidian.items import BookItem, ChapterItem
+
 
 class FreebookSpider(scrapy.Spider):
     name = 'freebook'
@@ -21,7 +23,8 @@ class FreebookSpider(scrapy.Spider):
             # print(li_nodes)
             for index, li_node in enumerate(li_nodes):
                 # 查看每本书的信息
-                item = {}
+                item = BookItem()
+
                 # item['name'] = li_node.css('h4 a').xpath('./text()').extract_first()
                 item['name'] = li_node.css('h4 a::text').get()
                 item['author'] = li_node.css('.name::text').get()
@@ -62,7 +65,7 @@ class FreebookSpider(scrapy.Spider):
                       priority=500)
 
     def parse_chapter(self, response):
-        item = {}
+        item = ChapterItem()
         item['title'] = response.css('.content-wrap::text').get()
         item['contents'] = response.css('.read-content p::text').extract()
         item['book_id'] = response.request.meta['book_id']

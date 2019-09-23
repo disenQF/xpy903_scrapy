@@ -16,7 +16,8 @@ NEWSPIDER_MODULE = 'qidian.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'qidian (+http://www.yourdomain.com)'
+USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) ' \
+             'Chrome/76.0.3809.132 Safari/537.36'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False  # 禁用自动下载robots.txt文件
@@ -27,7 +28,7 @@ ROBOTSTXT_OBEY = False  # 禁用自动下载robots.txt文件
 # Configure a delay for requests for the same website (default: 0)
 # See https://doc.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 5
+DOWNLOAD_DELAY = 5  # 每一个下载之间延迟时间，每隔5秒下载一次
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
 #CONCURRENT_REQUESTS_PER_IP = 16
@@ -64,9 +65,12 @@ DOWNLOAD_DELAY = 5
 
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'qidian.pipelines.QidianPipeline': 300,
-#}
+
+# 值越低，优先级越高。与请求的优先级规则是相反的。
+ITEM_PIPELINES = {
+   'qidian.pipelines.QidianPipeline': 300,
+   'qidian.pipelines.ESPipeline': 10,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/autothrottle.html
