@@ -9,4 +9,5 @@ cookies_list = [
 
 
 def get():
-    return random.choice(cookies_list)
+    cookie = random.choice(cookies_list)
+    return {kv.split('=')[0]: kv.split('=')[1] for kv in cookie.split(';')}

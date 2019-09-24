@@ -4,8 +4,9 @@
 #
 # See documentation in:
 # https://doc.scrapy.org/en/latest/topics/spider-middleware.html
-
+import selenium
 from scrapy import signals, Request
+from scrapy.http import HtmlResponse
 
 from qcc import ua, cookies
 
@@ -76,9 +77,14 @@ class QccDownloaderMiddleware(object):
 
         # 设置请求头
         # scrapy.Request
-        request.headers['User-Agent'] = ua.get()
-        request.headers['Cookie'] = cookies.get()
+        request.headers['User-Agent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36'
+        # request.headers['Cookie'] = cookies.get()
+        request.headers['Sec-Fetch-Mode'] = 'cors'
+        request.headers['Sec-Fetch-Site'] = 'none'
+        request.headers['Sec-Fetch-User'] = '?1'
+        request.headers['Upgrade-Insecure-Requests'] = 1
 
+        request.cookies = cookies.get()
 
         # 设置请求的代理 request.meta['proxy'] = 'http://ip:port'
 
@@ -111,3 +117,13 @@ class QccDownloaderMiddleware(object):
 
     def spider_opened(self, spider):
         spider.logger.info('Spider opened: %s' % spider.name)
+
+class SeleniumMiddleware(object):
+    def __init__(self):
+        self.chrome = selenium.webdriver.Chrome('driver/chromedriver')
+
+    def process_request(self, request, spider):
+        self.chrome.get(request.url)
+
+        return HtmlResponse()
+
