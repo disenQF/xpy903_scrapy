@@ -4,11 +4,13 @@
 #
 # See documentation in:
 # https://doc.scrapy.org/en/latest/topics/spider-middleware.html
-import scrapy
-from scrapy import signals
+
+from scrapy import signals, Request
+
+from qcc import ua
 
 
-class QidianSpiderMiddleware(object):
+class QccSpiderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the spider middleware does not modify the
     # passed objects.
@@ -33,11 +35,6 @@ class QidianSpiderMiddleware(object):
 
         # Must return an iterable of Request, dict or Item objects.
         for i in result:
-            if any((isinstance(i, dict),
-                    isinstance(i, scrapy.Item))):
-                # 判断是否存在id属性，如果没有，则增加id
-                pass
-
             yield i
 
     def process_spider_exception(self, response, exception, spider):
@@ -61,7 +58,7 @@ class QidianSpiderMiddleware(object):
         spider.logger.info('Spider opened: %s' % spider.name)
 
 
-class QidianDownloaderMiddleware(object):
+class QccDownloaderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the downloader middleware does not modify the
     # passed objects.
@@ -73,9 +70,15 @@ class QidianDownloaderMiddleware(object):
         crawler.signals.connect(s.spider_opened, signal=signals.spider_opened)
         return s
 
-    def process_request(self, request, spider):
+    def process_request(self, request: Request, spider):
         # Called for each request that goes through the downloader
         # middleware.
+
+        # 设置请求头
+        # scrapy.Request
+        request.headers['User-Agent'] = ua.get()
+
+        # 设置请求的代理 request.meta['proxy'] = 'http://ip:port'
 
         # Must either:
         # - return None: continue processing this request

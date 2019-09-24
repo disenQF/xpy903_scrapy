@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Scrapy settings for qidian project
+# Scrapy settings for qcc project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
@@ -9,18 +9,17 @@
 #     https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = 'qidian'
+BOT_NAME = 'qcc'
 
-SPIDER_MODULES = ['qidian.spiders']
-NEWSPIDER_MODULE = 'qidian.spiders'
+SPIDER_MODULES = ['qcc.spiders']
+NEWSPIDER_MODULE = 'qcc.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) ' \
-             'Chrome/76.0.3809.132 Safari/537.36'
+#USER_AGENT = 'qcc (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = False  # 禁用自动下载robots.txt文件
+ROBOTSTXT_OBEY = True
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
@@ -28,7 +27,7 @@ ROBOTSTXT_OBEY = False  # 禁用自动下载robots.txt文件
 # Configure a delay for requests for the same website (default: 0)
 # See https://doc.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 5  # 每一个下载之间延迟时间，每隔5秒下载一次
+#DOWNLOAD_DELAY = 3
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
 #CONCURRENT_REQUESTS_PER_IP = 16
@@ -48,14 +47,14 @@ DOWNLOAD_DELAY = 5  # 每一个下载之间延迟时间，每隔5秒下载一次
 # Enable or disable spider middlewares
 # See https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 #SPIDER_MIDDLEWARES = {
-#    'qidian.middlewares.QidianSpiderMiddleware': 543,
+#    'qcc.middlewares.QccSpiderMiddleware': 543,
 #}
 
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
-#    'qidian.middlewares.QidianDownloaderMiddleware': 543,
-#}
+DOWNLOADER_MIDDLEWARES = {
+   'qcc.middlewares.QccDownloaderMiddleware': 543,
+}
 
 # Enable or disable extensions
 # See https://doc.scrapy.org/en/latest/topics/extensions.html
@@ -65,12 +64,9 @@ DOWNLOAD_DELAY = 5  # 每一个下载之间延迟时间，每隔5秒下载一次
 
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
-
-# 值越低，优先级越高。与请求的优先级规则是相反的。
-ITEM_PIPELINES = {
-   'qidian.pipelines.QidianPipeline': 300,
-   'qidian.pipelines.ESPipeline': 10,
-}
+#ITEM_PIPELINES = {
+#    'qcc.pipelines.QccPipeline': 300,
+#}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/autothrottle.html
@@ -91,4 +87,4 @@ ITEM_PIPELINES = {
 #HTTPCACHE_EXPIRATION_SECS = 0
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
-#HTTPCACHE_STORAGE = 'scrapy.extensio.ns.httpcache.FilesystemCacheStorage'
+#HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
