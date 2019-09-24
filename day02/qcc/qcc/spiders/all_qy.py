@@ -34,6 +34,7 @@ class AllQySpider(scrapy.Spider):
         #  企业名称、电话、地址、运营状态（注销/吊销、在业、存续）、
         #  成立时间、纳税人识别号、统一社会信用代码、经营者、所属地区
         #  经营范围
+        print('-'*20,'开始提取数据', '-'*20)
         name = response.css('h1::text').get()
         phone, *_, address = response.css('.cvlu::text').extract()
         status = response.css('.tags span::text').get()
@@ -50,7 +51,7 @@ class AllQySpider(scrapy.Spider):
         province = response.css('#Cominfo').xpath('.//tr[8]//td[2]/text()').get()
         content = response.css('#Cominfo').xpath('.//tr[last()]//td[2]/text()').get()
 
-        return dict(
+        yield dict(
             name=name,
             phone=phone,
             address=address,

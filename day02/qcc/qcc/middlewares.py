@@ -4,9 +4,19 @@
 #
 # See documentation in:
 # https://doc.scrapy.org/en/latest/topics/spider-middleware.html
+import random
+
 import selenium
+import time
 from scrapy import signals, Request
 from scrapy.http import HtmlResponse
+from selenium.webdriver import Chrome
+from selenium.webdriver.chrome.options import Options
+
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support import ui
+from selenium.webdriver.common.by import By
+from selenium.webdriver import ActionChains
 
 from qcc import ua, cookies
 
@@ -120,12 +130,87 @@ class QccDownloaderMiddleware(object):
     def spider_opened(self, spider):
         spider.logger.info('Spider opened: %s' % spider.name)
 
+
 class SeleniumMiddleware(object):
     def __init__(self):
-        self.chrome = selenium.webdriver.Chrome('driver/chromedriver')
+        options = Options()
+        # options.add_argument('--headless')  # 无头浏览器，不显示窗口
+        # options.add_argument('--disable-gpu')
+
+        # 可执行驱动程序的位置
+        driver_path = '/Users/apple/PycharmProjects/scrapy_spider/driver/chromedriver'
+
+        self.chrome = Chrome(options=options,
+                             executable_path=driver_path)
+
+        self.is_logined = False  # 默认未登录
+
+    def get_track(self, distance):
+        track = []
+        current = 0
+        mid = distance * 3 / 4
+        t = 0.2
+        v = 0
+        while current < distance:
+            if current < mid:
+                a = 2
+            else:
+                a = -3
+            v0 = v
+            v = v0 + a * t
+            move = v0 * t + 1 / 2 * a * t * t
+            current += move
+            track.append(round(move))
+        return track
 
     def process_request(self, request, spider):
+        if not self.is_logined:
+            # 打开登录页面，实现登录
+            self.chrome.get('https://www.qichacha.com/user_login')
+            ui.WebDriverWait(self.chrome, 30).until(
+                EC.visibility_of_all_elements_located((By.CLASS_NAME, 'login-panel'))
+            )
+
+            self.chrome.find_element_by_css_selector('.login-panel-head div:nth-child(2) a').click()
+            self.chrome.find_element_by_id('nameNormal').send_keys('17791692095')
+            self.chrome.find_element_by_id('pwdNormal').send_keys('disen666')
+
+            # 处理滑动问题
+            slide_span = self.chrome.find_element_by_css_selector('#dom_id_one span')
+            slide_div = self.chrome.find_element_by_css_selector('#dom_id_one')
+
+            actions = ActionChains(self.chrome)
+            actions.click_and_hold(slide_span).perform()
+            actions.reset_actions()
+
+            print(slide_div.rect)
+            width = slide_div.rect['width'] # 348
+            offset = round(width/10, 2)
+            for cnt in range(1, 11):  # 1,...10
+                actions.move_by_offset(offset*cnt, 0).perform()
+                time.sleep(0.1)
+
+            actions.reset_actions()
+
+            self.chrome.find_element_by_css_selector('.login-btn').click()
+
+            self.is_logined = True
+
+        time.sleep(3)
+
         self.chrome.get(request.url)
 
-        return HtmlResponse()
+        if request.url.find('/firm_') == -1:
+            ui.WebDriverWait(self.chrome, 30).until(
+                EC.visibility_of_all_elements_located((By.CLASS_NAME, 'pills-after'))
+            )
+        else:
+            ui.WebDriverWait(self.chrome, 30).until(
+                EC.visibility_of_all_elements_located((By.ID, 'Cominfo'))
+            )
 
+        html = self.chrome.page_source  # str
+
+        return HtmlResponse(request.url,
+                            body=html.encode('utf-8'),
+                            request=request)
