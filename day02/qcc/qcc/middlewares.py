@@ -7,7 +7,7 @@
 
 from scrapy import signals, Request
 
-from qcc import ua
+from qcc import ua, cookies
 
 
 class QccSpiderMiddleware(object):
@@ -77,6 +77,8 @@ class QccDownloaderMiddleware(object):
         # 设置请求头
         # scrapy.Request
         request.headers['User-Agent'] = ua.get()
+        request.headers['Cookie'] = cookies.get()
+
 
         # 设置请求的代理 request.meta['proxy'] = 'http://ip:port'
 
