@@ -77,13 +77,15 @@ class QccDownloaderMiddleware(object):
 
         # 设置请求头
         # scrapy.Request
-        request.headers['User-Agent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36'
-        # request.headers['Cookie'] = cookies.get()
+        # request.headers['User-Agent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36'
+        request.headers['User-Agent'] = ua.get()
+
         request.headers['Sec-Fetch-Mode'] = 'cors'
         request.headers['Sec-Fetch-Site'] = 'none'
         request.headers['Sec-Fetch-User'] = '?1'
         request.headers['Upgrade-Insecure-Requests'] = 1
 
+        # 注： cookies是dict类型
         request.cookies = cookies.get()
 
         # 设置请求的代理 request.meta['proxy'] = 'http://ip:port'
