@@ -134,8 +134,8 @@ class QccDownloaderMiddleware(object):
 class SeleniumMiddleware(object):
     def __init__(self):
         options = Options()
-        # options.add_argument('--headless')  # 无头浏览器，不显示窗口
-        # options.add_argument('--disable-gpu')
+        options.add_argument('--headless')  # 无头浏览器，不显示窗口
+        options.add_argument('--disable-gpu')
 
         # 可执行驱动程序的位置
         driver_path = '/Users/apple/PycharmProjects/scrapy_spider/driver/chromedriver'
@@ -144,6 +144,7 @@ class SeleniumMiddleware(object):
                              executable_path=driver_path)
 
         self.is_logined = False  # 默认未登录
+
 
     def get_track(self, distance):
         track = []
@@ -184,11 +185,11 @@ class SeleniumMiddleware(object):
             actions.reset_actions()
 
             print(slide_div.rect)
-            width = slide_div.rect['width'] # 348
+            width = slide_div.rect['width']  # 348
             offset = round(width/10, 2)
             for cnt in range(1, 11):  # 1,...10
                 actions.move_by_offset(offset*cnt, 0).perform()
-                time.sleep(0.1)
+                time.sleep(0.05)
 
             actions.reset_actions()
 
@@ -196,7 +197,7 @@ class SeleniumMiddleware(object):
 
             self.is_logined = True
 
-        time.sleep(3)
+        time.sleep(10)
 
         self.chrome.get(request.url)
 
