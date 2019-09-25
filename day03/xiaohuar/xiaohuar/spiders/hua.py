@@ -14,7 +14,7 @@ class HuaSpider(scrapy.Spider):
 
         # 下一页的url
         next_page_url = response.css('.page_num a:nth-last-child(2)::attr("href")').get()
-        yield scrapy.Request(next_page_url)
+        yield scrapy.Request(next_page_url, priority=10)
 
     def parse_info(self, response):
         item = {}
