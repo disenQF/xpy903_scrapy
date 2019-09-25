@@ -8,13 +8,19 @@
 #     https://doc.scrapy.org/en/latest/topics/settings.html
 #     https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://doc.scrapy.org/en/latest/topics/spider-middleware.html
+import os
+
 from dushuwang import ua
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 BOT_NAME = 'dushuwang'
 
 SPIDER_MODULES = ['dushuwang.spiders']
 NEWSPIDER_MODULE = 'dushuwang.spiders'
 
+LOG_LEVEL = 'INFO'
+LOG_FILE = os.path.join(BASE_DIR, 'spider.log')
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 USER_AGENT = ua.get()
@@ -53,9 +59,9 @@ CONCURRENT_REQUESTS_PER_IP = 8
 
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
-#    'dushuwang.middlewares.DushuwangDownloaderMiddleware': 543,
-#}
+DOWNLOADER_MIDDLEWARES = {
+   'dushuwang.middlewares.DushuwangDownloaderMiddleware': 543,
+}
 
 # Enable or disable extensions
 # See https://doc.scrapy.org/en/latest/topics/extensions.html
@@ -65,9 +71,9 @@ CONCURRENT_REQUESTS_PER_IP = 8
 
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'dushuwang.pipelines.DushuwangPipeline': 300,
-#}
+ITEM_PIPELINES = {
+   'dushuwang.pipelines.DushuwangPipeline': 300,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/autothrottle.html

@@ -17,6 +17,9 @@ class DushuwangSpiderMiddleware(object):
     def from_crawler(cls, crawler):
         # This method is used by Scrapy to create your spiders.
         s = cls()
+        # 添加日志处理器
+        # s.logger.logger.add_handler()
+
         crawler.signals.connect(s.spider_opened, signal=signals.spider_opened)
         return s
 
@@ -71,6 +74,7 @@ class DushuwangDownloaderMiddleware(object):
     def process_request(self, request, spider):
         # Called for each request that goes through the downloader
         # middleware.
+        spider.logger.info('%s 准备下载' % request.url)
 
         # Must either:
         # - return None: continue processing this request
@@ -82,6 +86,7 @@ class DushuwangDownloaderMiddleware(object):
 
     def process_response(self, request, response, spider):
         # Called with the response returned from the downloader.
+        spider.logger.info('%s 下载完成，准备解析' % request.url)
 
         # Must either;
         # - return a Response object

@@ -8,4 +8,6 @@
 
 class DushuwangPipeline(object):
     def process_item(self, item, spider):
+        spider.logger.info(str(item))
+
         return item

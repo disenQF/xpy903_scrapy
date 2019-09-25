@@ -7,7 +7,10 @@ from scrapy.spiders import CrawlSpider, Rule
 class BookSpider(CrawlSpider):
     name = 'book'
     allowed_domains = ['www.dushu.com', 'pic.dushu.com', 'img.dushu.com']
-    start_urls = ['https://www.dushu.com/book/']
+    # start_urls = ['https://www.dushu.com/book/']
+
+    def start_requests(self):
+        pass
 
     rules = (
         # 分类下的图片列表

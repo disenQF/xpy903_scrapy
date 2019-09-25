@@ -21,6 +21,10 @@ NEWSPIDER_MODULE = 'xiaohuar.spiders'
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
 
+# 设置日志等级
+LOG_LEVEL = 'INFO'
+LOG_FILE = 'spider.log'
+
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 # CONCURRENT_REQUESTS = 32
 
