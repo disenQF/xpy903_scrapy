@@ -10,6 +10,8 @@
 #     https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 import os
 
+from pymysql.cursors import DictCursor
+
 from dushuwang import ua
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -53,9 +55,9 @@ CONCURRENT_REQUESTS_PER_IP = 8
 
 # Enable or disable spider middlewares
 # See https://doc.scrapy.org/en/latest/topics/spider-middleware.html
-#SPIDER_MIDDLEWARES = {
-#    'dushuwang.middlewares.DushuwangSpiderMiddleware': 543,
-#}
+SPIDER_MIDDLEWARES = {
+   'dushuwang.middlewares.DushuwangSpiderMiddleware': 543,
+}
 
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
@@ -73,6 +75,18 @@ DOWNLOADER_MIDDLEWARES = {
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
    'dushuwang.pipelines.DushuwangPipeline': 300,
+}
+
+
+# 配置数据库连接
+DB_CONFIG = {
+   'host': 'localhost',
+   'port': 3307,
+   'user': 'root',
+   'password': 'root',
+   'db': 'mes',
+   'charset': 'utf8',
+   'cursorclass': DictCursor
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

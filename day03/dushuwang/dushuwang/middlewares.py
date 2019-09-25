@@ -4,8 +4,10 @@
 #
 # See documentation in:
 # https://doc.scrapy.org/en/latest/topics/spider-middleware.html
-
+import pymysql
 from scrapy import signals
+
+from dushuwang import settings
 
 
 class DushuwangSpiderMiddleware(object):
@@ -20,6 +22,7 @@ class DushuwangSpiderMiddleware(object):
         # 添加日志处理器
         # s.logger.logger.add_handler()
 
+        crawler.signals.connect(s.spider_closed, signal=signals.spider_closed)
         crawler.signals.connect(s.spider_opened, signal=signals.spider_opened)
         return s
 
@@ -58,6 +61,45 @@ class DushuwangSpiderMiddleware(object):
     def spider_opened(self, spider):
         spider.logger.info('Spider opened: %s' % spider.name)
 
+        # 添加数据库连接对象
+        spider.db = pymysql.Connect(**settings.DB_CONFIG)
+
+        # 初始化创建表
+        # name,cover_url,price,author,publisher,
+        # labels,ISBN,publish_time,pages
+        select_exist_table = """
+            select count(*) as cnt from information_schema.tables
+            where table_schema='mes'
+            and table_name='book';
+        """
+
+        create_sql = """
+            create table book(
+               id varchar(32) primary key, 
+               name varchar(50),
+               cover_url VARCHAR(200),
+               price VARCHAR(10),
+               author VARCHAR(50),
+               publisher VARCHAR(50),
+               labels VARCHAR(50),
+               ISBN   VARCHAR(50),
+               publish_time VARCHAR(50),
+               pages VARCHAR(6)
+            )
+        """
+        with spider.db as c:
+            c.execute(select_exist_table)
+            result = c.fetchone()
+            print('---book表是否存在mes库中---', result)
+            if result['cnt'] == 0:
+                c.execute(create_sql)
+
+
+    def spider_closed(self, spider):
+        spider.logger.info('Spider closed: %s' % spider.name)
+
+        # 关闭数据库连接
+        spider.db.close()
 
 class DushuwangDownloaderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
