@@ -32,8 +32,5 @@ class XiaohuaImagePipeline(ImagesPipeline):
         return '%s/%s.jpg' % (dir_name, filename)  # 返回图片文件的位置
 
     def item_completed(self, results, item, info):
-        print('-----下载完成----')
-        print(results)
-
         item[self.images_result_field] = [x['path'] for ok, x in results if ok]
         return item
