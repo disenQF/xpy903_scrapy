@@ -54,9 +54,9 @@ ROBOTSTXT_OBEY = False
 
 # Enable or disable spider middlewares
 # See https://doc.scrapy.org/en/latest/topics/spider-middleware.html
-#SPIDER_MIDDLEWARES = {
-#    'dushu_redis.middlewares.DushuRedisSpiderMiddleware': 543,
-#}
+SPIDER_MIDDLEWARES = {
+   'dushu_redis.middlewares.DushuRedisSpiderMiddleware': 543,
+}
 
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
@@ -72,9 +72,9 @@ ROBOTSTXT_OBEY = False
 
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'dushu_redis.pipelines.DushuRedisPipeline': 300,
-#}
+ITEM_PIPELINES = {
+   'dushu_redis.pipelines.DushuRedisPipeline': 300,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/autothrottle.html

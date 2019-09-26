@@ -7,12 +7,12 @@ from scrapy_redis.spiders import RedisCrawlSpider
 
 class BookRedisSpider(RedisCrawlSpider):
     name = 'book_redis'
-    allowed_domains = ['www.dushu.com']
+    allowed_domains = ['www.dushu.com', 'img.dushu.com', 'pic.dushu.com']
 
     redis_key = 'dushu-book:start_urls'  # 可以指定任何有意义的名称
 
     rules = [
-        Rule(LinkExtractor(restrict_css=('.sub-catalog', '.pages')), follow=True),
+        Rule(LinkExtractor(restrict_css=('.sub-catalog', '.pages'), deny=r'.*?/author/.*?/'), follow=True),
         Rule(LinkExtractor(restrict_css='.bookslist'), callback='parse_book', follow=False)
     ]
 

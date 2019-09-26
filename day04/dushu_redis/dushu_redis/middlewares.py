@@ -4,7 +4,7 @@
 #
 # See documentation in:
 # https://doc.scrapy.org/en/latest/topics/spider-middleware.html
-
+from pymongo import MongoClient
 from scrapy import signals
 
 
@@ -17,7 +17,9 @@ class DushuRedisSpiderMiddleware(object):
     def from_crawler(cls, crawler):
         # This method is used by Scrapy to create your spiders.
         s = cls()
+
         crawler.signals.connect(s.spider_opened, signal=signals.spider_opened)
+        crawler.signals.connect(s.spider_closed, signal=signals.spider_closed)
         return s
 
     def process_spider_input(self, response, spider):
@@ -54,6 +56,19 @@ class DushuRedisSpiderMiddleware(object):
 
     def spider_opened(self, spider):
         spider.logger.info('Spider opened: %s' % spider.name)
+
+        spider.mongo_client = MongoClient('119.3.170.97', 27017)
+        spider.mongo_books = spider.mongo_client.books  # 打开数据库
+
+    def spider_closed(self, spider):
+        # 尝试关闭连接
+        spider.mongo_client.close()
+
+        # 手动回收资源
+        spider.mongo_client = None
+        spider.mongo_books = None
+
+
 
 
 class DushuRedisDownloaderMiddleware(object):
