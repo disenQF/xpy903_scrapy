@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import http.client, mimetypes, urllib, json, time, requests
 
 ######################################################################

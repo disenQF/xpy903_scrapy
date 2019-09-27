@@ -80,11 +80,11 @@ ITEM_PIPELINES = {
 
 # 配置数据库连接
 DB_CONFIG = {
-   'host': 'localhost',
+   'host': '119.3.170.97',
    'port': 3307,
    'user': 'root',
    'password': 'root',
-   'db': 'mes',
+   'db': 'dushu',
    'charset': 'utf8',
    'cursorclass': DictCursor
 }

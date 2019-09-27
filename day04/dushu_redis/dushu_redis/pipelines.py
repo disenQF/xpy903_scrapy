@@ -18,7 +18,7 @@ class DushuRedisPipeline(object):
         self.items.append(item)
 
         # 每100个item写入库中
-        if len(self.items) == 100:
+        if len(self.items) == 20:
             spider.mongo_books.book.insert(self.items)
             self.items = []
 
